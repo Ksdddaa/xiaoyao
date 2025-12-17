@@ -1,0 +1,195 @@
+<!DOCTYPE html>  
+<html lang="zh-CN">  
+<head>  
+<meta charset="UTF-8" />  
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">  
+<meta name="apple-mobile-web-app-capable" content="yes">  
+<title>给小纯</title>  
+  
+<style>  
+html,body{  
+    margin:0;  
+    padding:0;  
+    height:100%;  
+    overflow:hidden;  
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;  
+    background:#000;  
+    color:#fff;  
+}  
+canvas{  
+    position:fixed;  
+    inset:0;  
+    transition:background 2s ease;  
+}  
+.center{  
+    position:absolute;  
+    inset:0;  
+    display:flex;  
+    align-items:center;  
+    justify-content:center;  
+    text-align:center;  
+    padding:24px;  
+    z-index:2;  
+}  
+.card{  
+    max-width:340px;  
+}  
+.name{  
+    font-size:26px;  
+    letter-spacing:2px;  
+    margin-bottom:16px;  
+    color:#ff8fb5;  
+}  
+.text{  
+    font-size:17px;  
+    line-height:2;  
+    min-height:260px;  
+}  
+button{  
+    margin-top:28px;  
+    padding:13px 34px;  
+    border-radius:40px;  
+    border:none;  
+    font-size:16px;  
+    background:#ff5a95;  
+    color:white;  
+    cursor:pointer;  
+    box-shadow:0 0 32px rgba(255,90,149,.8);  
+}  
+button:hover{  
+    transform:scale(1.05);  
+}  
+.hint{  
+    position:absolute;  
+    bottom:28px;  
+    font-size:13px;  
+    opacity:.6;  
+}  
+.fade{  
+    animation:fadeIn 2s forwards;  
+}  
+@keyframes fadeIn{  
+    from{opacity:0}  
+    to{opacity:1}  
+}  
+</style>  
+</head>  
+  
+<body>  
+<canvas id="bg"></canvas>  
+  
+<div class="center">  
+    <div class="card">  
+        <div class="name">小纯</div>  
+        <div class="text" id="text"></div>  
+        <button id="btn" style="display:none" onclick="final()">我想再靠近你一点</button>  
+    </div>  
+    <div class="hint">轻轻点一下</div>  
+</div>  
+  
+<audio id="bgm" loop>  
+<source src="https://cdn.pixabay.com/download/audio/2022/10/26/audio_0e9f45a6a3.mp3">  
+</audio>  
+  
+<script>  
+/* ===== 星空 ===== */  
+const c=document.getElementById("bg");  
+const ctx=c.getContext("2d");  
+function resize(){c.width=innerWidth;c.height=innerHeight}  
+resize();addEventListener("resize",resize);  
+  
+let pink=false;  
+const stars=Array.from({length:150},()=>({  
+    x:Math.random()*c.width,  
+    y:Math.random()*c.height,  
+    r:Math.random()*1.6+0.4,  
+    v:Math.random()*0.25+0.1  
+}));  
+  
+function draw(){  
+    ctx.clearRect(0,0,c.width,c.height);  
+    stars.forEach(s=>{  
+        ctx.beginPath();  
+        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);  
+        ctx.fillStyle=pink ? "rgba(255,170,200,0.9)" : "white";  
+        ctx.fill();  
+        s.y+=s.v;  
+        if(s.y>c.height) s.y=0;  
+    });  
+    requestAnimationFrame(draw);  
+}  
+draw();  
+  
+/* ===== 暧昧文案 ===== */  
+const words=[  
+"小纯，",  
+"<br><br>",  
+"我一直在想，",  
+"要用什么方式，把这些话告诉你。",  
+"<br><br>",  
+"因为和你相处的时候，",  
+"很多感觉都变得很轻。",  
+"<br><br>",  
+"轻到我会开始期待下一次见你，",  
+"也会在不经意的时候想到你。",  
+"<br><br>",  
+"不是突然的那种喜欢，",  
+"而是慢慢靠近的那种在意。",  
+"<br><br>",  
+"所以我想说，",  
+"如果你愿意，",  
+"我们是不是可以——",  
+"<br>",  
+"再靠近一点点？"  
+];  
+  
+let i=0;  
+const box=document.getElementById("text");  
+function type(){  
+    if(i<words.length){  
+        box.innerHTML+=words[i++];  
+        setTimeout(type,650);  
+    }else{  
+        document.getElementById("btn").style.display="inline-block";  
+    }  
+}  
+  
+/* ===== iOS 启动 ===== */  
+let started=false;  
+document.body.addEventListener("click",()=>{  
+    if(!started){  
+        document.getElementById("bgm").play();  
+        type();  
+        started=true;  
+    }  
+});  
+  
+/* ===== 点按钮 → 粉色星空 + 回消息欲 ===== */  
+function final(){  
+    pink=true;  
+    box.innerHTML="";  
+    document.getElementById("btn").style.display="none";  
+    const reply=[  
+        "不用现在给我答案。",  
+        "<br><br>",  
+        "只是想让你知道，",  
+        "你对我来说，",  
+        "真的很特别。",  
+        "<br><br>",  
+        "如果你愿意，",  
+        "跟我说一句话就好。",  
+        "<br>",  
+        "我会很开心。"  
+    ];  
+    let j=0;  
+    function show(){  
+        if(j<reply.length){  
+            box.innerHTML+=reply[j++];  
+            setTimeout(show,700);  
+        }  
+    }  
+    show();  
+}  
+</script>  
+</body>  
+</html>  
