@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- iPhone 全屏沉浸关键 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <title>给小姚</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            height: 100vh;
+            background: linear-gradient(180deg, #ffe4ec, #fff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.95);
+            padding: 40px 30px;
+            border-radius: 26px;
+            text-align: center;
+            box-shadow: 0 20px 45px rgba(255, 120, 150, 0.25);
+            width: 85vw;
+            max-width: 360px;
+            position: relative;
+        }
+
+        h1 {
+            color: #ff6b81;
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+        }
+
+        #text {
+            font-size: 16px;
+            line-height: 2;
+            color: #444;
+            min-height: 200px;
+            margin-bottom: 28px;
+        }
+
+        button {
+            padding: 11px 26px;
+            border-radius: 30px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #yes {
+            background: #ff6b81;
+            color: white;
+        }
+
+        #yes:hover {
+            transform: scale(1.05);
+        }
+
+        #no {
+            background: #f1f1f1;
+            color: #777;
+            position: absolute;
+        }
+
+        .music {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            font-size: 14px;
+            color: #ff6b81;
+            cursor: pointer;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff6b81;
+            font-size: 14px;
+            animation: float 3s infinite ease-in;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); opacity: 0.6; }
+            100% { transform: translateY(-50px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="music" onclick="startMusic()">🎧</div>
+
+    <h1>小姚</h1>
+    <div id="text"></div>
+
+    <button id="yes" onclick="sayYes()">想继续靠近你</button>
+    <button id="no" onmouseover="moveNo()">再看看</button>
+</div>
+
+<audio id="bgm" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4b8b65bfa3.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    // 暧昧型文案（不会吓人）
+    const words = [
+        "其实有些话，",
+        "我想了很久。",
+        "<br><br>",
+        "和你聊天的时候，",
+        "时间总是过得特别快。",
+        "<br><br>",
+        "有时候会期待你的消息，",
+        "也会因为你的一句话开心很久。",
+        "<br><br>",
+        "所以我在想，",
+        "我们是不是可以，",
+        "再靠近一点点？"
+    ];
+
+    let index = 0;
+    const textBox = document.getElementById("text");
+
+    function typeWriter() {
+        if (index < words.length) {
+            textBox.innerHTML += words[index];
+            index++;
+            setTimeout(typeWriter, 650);
+        }
+    }
+    typeWriter();
+
+    function sayYes() {
+        alert("那我们慢慢来，我会很认真 ❤️");
+    }
+
+    function moveNo() {
+        const noBtn = document.getElementById("no");
+        const card = document.querySelector(".card");
+        const maxX = card.clientWidth - noBtn.offsetWidth;
+        const maxY = card.clientHeight - noBtn.offsetHeight;
+        noBtn.style.left = Math.random() * maxX + "px";
+        noBtn.style.top = Math.random() * maxY + "px";
+    }
+
+    function startMusic() {
+        document.getElementById("bgm").play();
+    }
+
+    // 漂浮爱心
+    setInterval(() => {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = "❤";
+        heart.style.left = Math.random() * 300 + "px";
+        heart.style.bottom = "10px";
+        document.querySelector(".card").appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
+    }, 700);
+</script>
+
+</body>
+</html>
